@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %}Spytaj{% endblock %}
+{% block content %}
+    <form method="POST" action="{% url 'ask' %}">
+        {% csrf_token %}
+        {{form.as_p}}
+        <input type="submit" value="Spytaj"> 
+    </form>
+{% endblock %}

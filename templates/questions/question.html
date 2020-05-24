@@ -1,0 +1,10 @@
+{% extends 'base.html' %} 
+{% block title %}{{question.title|truncatechars:52}}{% endblock %}
+{% block content %}
+<h1>{{question.title}}</h1>
+<p>{{question.content}}</p>
+<form method="POST" action="{% url 'answer' %}">
+    {{form.as_p}}
+    <input type="submit" value="Odpowiedz">
+</form>
+{% endblock %}
