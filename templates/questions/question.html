@@ -3,7 +3,12 @@
 {% block content %}
 <h1>{{question.title}}</h1>
 <p>{{question.content}}</p>
-<form method="POST" action="{% url 'answer' %}">
+{% for answer in question.answers.all %}
+    <h3>{{answer.author}}</h3>
+    <p>{{answer.content}}</p>
+{% endfor %}
+<form method="POST" action="{% url 'question' question.id %}">
+    {% csrf_token %}
     {{form.as_p}}
     <input type="submit" value="Odpowiedz">
 </form>

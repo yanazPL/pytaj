@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404, reverse, HttpResponseRedirect
 from.forms import QuestionForm, AnswerForm
 from .models import Question
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def index(request):
     return render(request, 'questions/index.html', {})
 
+@login_required
 def ask(request):
     if request.method == 'POST':
         form = QuestionForm(request.POST)
@@ -19,11 +21,18 @@ def ask(request):
         form = QuestionForm()
     return render(request, 'questions/ask.html', {'form' : form})
 
-def answer(request):
-    # if request.method = "POST":
-    pass
-
 def question(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    form = AnswerForm()
+    
+    if request.method == 'POST':
+        form = AnswerForm(request.POST)
+        if form.is_valid():
+            answer = form.save(commit=False)
+            answer.author = request.user
+            answer.question = question
+            answer.save()
+            return HttpResponseRedirect(reverse('question', args=(question.id,)))
+    else:
+        form = AnswerForm()
+        
     return render(request, 'questions/question.html', {'question': question, 'form' : form}, )
