@@ -7,7 +7,7 @@
     <h3>{{answer.author}}</h3>
     <p>{{answer.content}}</p>
 {% endfor %}
-<form method="POST" action="{% url 'question' question.id %}">
+<form method="POST" action="{% url 'answer' question.id %}">
     {% csrf_token %}
     {{form.as_p}}
     <input type="submit" value="Odpowiedz">
