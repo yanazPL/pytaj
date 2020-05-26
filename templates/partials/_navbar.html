@@ -1,1 +1,9 @@
-<p>navbar</p>
+<nav>
+	<a href="{% url 'ask'%}">Zapytaj</a>
+    <a href="{% url 'index' %}">Strona głowna</a>
+    {% if user.is_authenthicated%}
+        <a href="{% url 'logout' %}">Wyloguj</a>
+    {% else %}
+        <a href="{% url 'login' %}">Zaloguj</a>
+    {% endif %}
+</nav>

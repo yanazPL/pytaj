@@ -4,7 +4,8 @@ from .models import Question
 from django.contrib.auth.decorators import login_required
 
 def index(request):
-    return render(request, 'questions/index.html', {})
+    questions = Question.objects.order_by('-date')
+    return render(request, 'questions/index.html', {'questions' : questions})
 
 @login_required
 def ask(request):
