@@ -6,6 +6,7 @@
 {% for answer in question.answers.all %}
     <h3>{{answer.author}}</h3>
     <p>{{answer.content}}</p>
+    <p>{{answer.votes.count}}</p>
 {% endfor %}
 <form method="POST" action="{% url 'answer' question.id %}">
     {% csrf_token %}

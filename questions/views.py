@@ -35,4 +35,4 @@ def answer(request, question_id):
         answer.author = request.user
         answer.question = question
         answer.save()
-        return HttpResponseRedirect(reverse('question', args=(question.id,)))
+    return HttpResponseRedirect(reverse('question', args=(question.id,)))

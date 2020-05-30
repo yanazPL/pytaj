@@ -4,6 +4,7 @@ from datetime import datetime
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
+from vote.models import VoteModel
 
 class Question(models.Model):
     title = models.CharField(max_length=128)
@@ -13,7 +14,8 @@ class Question(models.Model):
     #zmienie na on_delete=SET() nieznany
     #dodać sygnał który zmienia ilość pytań użytkownika
 
-class Answer(models.Model):
+
+class Answer(VoteModel, models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="answers")
     content = models.TextField()
     author = models.ForeignKey(User, related_name="answers", on_delete=models.DO_NOTHING)
