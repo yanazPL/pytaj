@@ -1,6 +1,6 @@
-from django.shortcuts import render, redirect, get_object_or_404, reverse, HttpResponseRedirect
+from django.shortcuts import render, redirect, get_object_or_404, reverse, HttpResponseRedirect, HttpResponse
 from.forms import QuestionForm, AnswerForm
-from .models import Question
+from .models import Question, Answer
 from django.contrib.auth.decorators import login_required
 
 def index(request):
@@ -36,3 +36,16 @@ def answer(request, question_id):
         answer.question = question
         answer.save()
     return HttpResponseRedirect(reverse('question', args=(question.id,)))
+
+def upvote(request):
+    if request.is_ajax and request.method == "POST":
+        answer_id = request.POST.get('answer_id')
+        if answer_id:
+            answer = get_object_or_404(Answer, pk=answer_id)
+            answer.votes.up(request.user.id)
+            return HttpResponse("w drugim ifie")
+        return HttpResponse("w pierwszym ifie")
+    else:
+        return HttpResponse("poza ifami")
+        
+        

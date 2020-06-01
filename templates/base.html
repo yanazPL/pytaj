@@ -12,6 +12,7 @@
     <!-- main content -->
     {% block content %}{% endblock %}
     {% include 'partials/_footer.html' %}
-
+    <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+	{% block javascript %}{% endblock %}
 </body>
 </html>

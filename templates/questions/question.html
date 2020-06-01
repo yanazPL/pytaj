@@ -1,4 +1,4 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
 {% block title %}{{question.title|truncatechars:52}}{% endblock %}
 {% block content %}
 <h1>{{question.title}}</h1>
@@ -6,11 +6,39 @@
 {% for answer in question.answers.all %}
     <h3>{{answer.author}}</h3>
     <p>{{answer.content}}</p>
-    <p>{{answer.votes.count}}</p>
+    <p>
+        <i class="upvote" answer-id="{{answer.id}}">&#8593</i>
+        {{answer.votes.count}}
+        <i class="downvote" answer-id="{{answer.id}}">&#8595</i>
+    </p>
 {% endfor %}
 <form method="POST" action="{% url 'answer' question.id %}">
     {% csrf_token %}
     {{form.as_p}}
     <input type="submit" value="Odpowiedz">
 </form>
+{% endblock %}
+{% block javascript %}
+    {% load static %}
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+    <script>
+        //upvote and downvote script
+        var csrftoken = window.Cookies.get('csrftoken');
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+        $(".upvote").click( function() {
+            let answerid = $(this).attr("answer-id");
+            console.log(answerid);
+            $.post("{% url 'upvote' %}", {answer_id:answerid});
+        });
+    </script>
 {% endblock %}
