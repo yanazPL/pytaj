@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404, reverse, HttpResponseRedirect, HttpResponse
+from django.views import View
 from.forms import QuestionForm, AnswerForm
 from .models import Question, Answer
 from django.contrib.auth.decorators import login_required
@@ -47,5 +48,24 @@ def upvote(request):
         return HttpResponse("w pierwszym ifie")
     else:
         return HttpResponse("poza ifami")
-        
-        
+
+class AnyVote(View):
+    def post(self, request, *args, **kwargs):
+        if request.is_ajax:
+            answer_id = request.POST.get('answer_id')
+            if answer_id:
+                answer = get_object_or_404(Answer, pk=answer_id)
+                self.votes_action(answer, request.user.id)
+                return HttpResponse("w drugim ifie")
+            return HttpResponse("w pierwszym ifie")
+        else:
+            return HttpResponse("poza ifami")
+            
+    def votes_action(self, user_id):
+        pass
+
+class Upvote(AnyVote):
+    def votes_action(self, answer, user_id):
+        answer.votes.up(user_id)
+
+

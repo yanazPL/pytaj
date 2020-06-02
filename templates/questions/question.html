@@ -7,9 +7,9 @@
     <h3>{{answer.author}}</h3>
     <p>{{answer.content}}</p>
     <p>
-        <i class="upvote" answer-id="{{answer.id}}">&#8593</i>
-        {{answer.votes.count}}
-        <i class="downvote" answer-id="{{answer.id}}">&#8595</i>
+        <i class="upvote" data-answer-id="{{answer.id}}">&#8593</i>
+        <span id="score-{{answer.id}}">{{answer.votes.count}}</span>
+        <i class="downvote" data-answer-id="{{answer.id}}">&#8595</i>
     </p>
 {% endfor %}
 <form method="POST" action="{% url 'answer' question.id %}">
@@ -36,9 +36,15 @@
             }
         });
         $(".upvote").click( function() {
-            let answerid = $(this).attr("answer-id");
+            let answerid = $(this).data("answer-id");
             console.log(answerid);
-            $.post("{% url 'upvote' %}", {answer_id:answerid});
+            $.post("{% url 'upvote' %}", {answer_id:answerid}, function(response) {
+                $("#score-" + answerid).load(window.location.href + " " + "#score-" + answerid);
+                alert(response);
+            });
         });
+        function funfun(response) {
+            
+        }
     </script>
 {% endblock %}
