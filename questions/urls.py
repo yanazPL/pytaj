@@ -6,5 +6,5 @@ urlpatterns = [
     path('ask', views.ask, name="ask"),
     path('question/<int:question_id>', views.question, name="question"),
     path('answer/<int:question_id>', views.answer, name="answer"),
-    path('answer/upvote', views.upvote, name='upvote'),
+    path('answer/upvote', views.Upvote.as_view(), name='upvote'),
 ]

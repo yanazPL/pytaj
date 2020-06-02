@@ -1,10 +1,17 @@
 <nav>
-	<a href="{% url 'ask'%}">Zapytaj</a>
-    <a href="{% url 'index' %}">Strona głowna</a>
-    {% if user.is_authenticated %}
-        <a href="{% url 'logout' %}">Wyloguj</a>
-    {% else %}
-        <a href="{% url 'login' %}">Zaloguj</a>
-        <a href="{% url 'signup' %}">Zarejestruj</a>
-    {% endif %}
+    <div id="nav-left">
+        <div class="logo">logo</div>
+        <ul id="navlinks">
+                <li><a href="{% url 'ask'%}">Zapytaj</a></li>
+                <li><a href="{% url 'index' %}">Strona głowna</a></li>
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'logout' %}">Wyloguj</a></li>
+            {% else %}
+                <li><a href="{% url 'login' %}">Zaloguj</a></li>
+                <li><a href="{% url 'signup' %}">Zarejestruj</a></li>
+            {% endif %}
+        </div>
+    </div>
+    <div class="profile-button">B</div>
+
 </nav>

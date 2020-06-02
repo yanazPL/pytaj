@@ -60,7 +60,7 @@ class AnyVote(View):
             return HttpResponse("w pierwszym ifie")
         else:
             return HttpResponse("poza ifami")
-            
+
     def votes_action(self, user_id):
         pass
 
@@ -68,4 +68,10 @@ class Upvote(AnyVote):
     def votes_action(self, answer, user_id):
         answer.votes.up(user_id)
 
+class Downvote(AnyVote):
+     def votes_action(self, answer, user_id):
+        answer.votes.down(user_id)
 
+class Unvote(AnyVote):
+    def votes_action(self, answer, user_id):
+        answer.vote.delete(user_id)
