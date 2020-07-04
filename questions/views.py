@@ -44,7 +44,7 @@ def upvote(request):
         if answer_id:
             answer = get_object_or_404(Answer, pk=answer_id)
             answer.votes.up(request.user.id)
-            return HttpResponse("w drugim ifie")
+            return HttpResponse("zaglosowawno w gore")
         return HttpResponse("w pierwszym ifie")
     else:
         return HttpResponse("poza ifami")
@@ -56,7 +56,7 @@ class AnyVote(View):
             if answer_id:
                 answer = get_object_or_404(Answer, pk=answer_id)
                 self.votes_action(answer, request.user.id)
-                return HttpResponse("w drugim ifie")
+                return HttpResponse("zaglosowano")
             return HttpResponse("w pierwszym ifie")
         else:
             return HttpResponse("poza ifami")
@@ -69,9 +69,18 @@ class Upvote(AnyVote):
         answer.votes.up(user_id)
 
 class Downvote(AnyVote):
-     def votes_action(self, answer, user_id):
+    def votes_action(self, answer, user_id):
         answer.votes.down(user_id)
 
 class Unvote(AnyVote):
     def votes_action(self, answer, user_id):
         answer.vote.delete(user_id)
+
+class Search(View):
+    def get(self, request, *args, **kwargs):
+        questions_list = Question.objects.order_by("-date")
+        
+        if 'q' in request.GET:
+            questions_list = questions_list.filter(title__icontains = request.GET['q'])
+        
+        return render(request, 'questions/search.html', {'questions' : questions_list})

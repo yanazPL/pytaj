@@ -8,12 +8,22 @@ nav {
     position: sticky;
     width: 100%;
     top: 0;
-    left: 0;
+    left: 0; 
     z-index: 120;
     background-color: #4d636f;
     display:flex;
     justify-content: space-between;
+    text-align: center;
     color: white;
+}
+.logo {
+    text-align: center;
+    margin: auto;
+}
+.profile-button {
+    margin: auto 0;
+    vertical-align: middle;
+    line-height: normal;
 }
 #nav-left {
     display:flex;
@@ -26,9 +36,19 @@ nav {
     margin: 0;
     padding: 0;
 }
-#navlinks li {
-    display: inline;
+#navlinks li, .profile-button, .logo {
+    display: inline-block;
+    height:40px;
+    width:50px;
+    font-size: 25px;
 }
 a {
     text-decoration: none;
+    color:inherit;
+}
+i.is-downvoted {
+    color:#6366ee;
+}
+i.is-upvoted {
+    color:#ff0000;
 }

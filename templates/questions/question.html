@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load votes_exists %}
 {% block title %}{{question.title|truncatechars:52}}{% endblock %}
 {% block content %}
 <h1>{{question.title}}</h1>
@@ -6,10 +7,12 @@
 {% for answer in question.answers.all %}
     <h3>{{answer.author}}</h3>
     <p>{{answer.content}}</p>
-    <p>
-        <i class="upvote" data-answer-id="{{answer.id}}">&#8593</i>
-        <span id="score-{{answer.id}}">{{answer.votes.count}}</span>
-        <i class="downvote" data-answer-id="{{answer.id}}">&#8595</i>
+    {% votes_up_exists answer request.user.id as is_upvoted %}
+    {% votes_down_exists answer request.user.id as is_downvoted %}
+    <p id="answer-{{answer.id}}">
+        <i id="upvote-{{answer.id}}" class="upvote{% if is_upvoted %} is-upvoted{% endif %}" data-answer-id="{{answer.id}}">&#8593</i>
+        <span id="score-{{answer.id}}">{{answer.vote_score}}</span>
+        <i id="downvote-{{answer.id}}" class="downvote{% if is_downvoted%} is-downvoted{% endif %}" data-answer-id="{{answer.id}}">&#8595</i>
     </p>
 {% endfor %}
 <form method="POST" action="{% url 'answer' question.id %}">
@@ -37,15 +40,23 @@
         });
         $(".upvote").click( function() {
             let answerid = $(this).data("answer-id");
-            console.log(answerid);
             $.post("{% url 'upvote' %}", {answer_id:answerid}, function(response) {
                 $("#score-" + answerid).load(window.location.href + " " + "#score-" + answerid);
+                $("#upvote-" + answerid).load(window.location.href + " " + "#upvote-" + answerid);
+                $("#downvote-" + answerid).load(window.location.href + " " + "#downvote-" + answerid);
+                //$("#answer-" + answerid).load(window.location.href + " " + "#answer-" + answerid);
                 alert(response);
             });
         });
-
-        function funfun(response) {
-            
-        }
+        $(".downvote").click( function() {
+            let answerid = $(this).data("answer-id");
+            $.post("{% url 'downvote' %}", {answer_id:answerid}, function(response) {
+                $("#score-" + answerid).load(window.location.href + " " + "#score-" + answerid);
+                $("#upvote-" + answerid).load(window.location.href + " " + "#upvote-" + answerid);
+                $("#downvote-" + answerid).load(window.location.href + " " + "#downvote-" + answerid);
+                //$("#answer-" + answerid).load(window.location.href + " " + "#answer-" + answerid);
+                alert(response);
+            });
+        });
     </script>
 {% endblock %}
