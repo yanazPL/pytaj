@@ -1,54 +1,90 @@
 p {
-    color:brown;
+  color: brown;
 }
 .voted {
-    color:orangered;
+  color: orangered;
 }
 nav {
-    position: sticky;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 65px;
+  /* position: sticky;
     width: 100%;
     top: 0;
     left: 0; 
-    z-index: 120;
-    background-color: #4d636f;
-    display:flex;
+    z-index: 120; */
+  background-color: #4d636f;
+  /* display:flex;
     justify-content: space-between;
-    text-align: center;
-    color: white;
+    text-align: center; */
+  color: white;
 }
 .logo {
-    text-align: center;
-    margin: auto;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  /* text-align: center;
+    margin: auto; */
+}
+.search-form {
+  padding: 0 10px;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 .profile-button {
-    margin: auto 0;
+  padding: 0 10px;
+  height: 100%;
+  align-items: center;
+  display: flex;
+  /* margin: auto 0;
     vertical-align: middle;
-    line-height: normal;
+    line-height: normal; */
+}
+#navlinks li {
+  height: 100%;
 }
 #nav-left {
-    display:flex;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  /* display:flex; */
 }
+
 #navlinks a {
-    color:white;
+  padding: 0 10px;
+  height: 100%;
+  color: white;
+  display: flex;
+  align-items: center;
 }
 #navlinks {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
-#navlinks li, .profile-button, .logo {
-    display: inline-block;
+#navlinks li,
+.profile-button,
+.logo {
+  /* display: inline-block;
     height:40px;
     width:50px;
-    font-size: 25px;
+    font-size: 25px; */
+}
+.logo {
+  height: 100%;
 }
 a {
-    text-decoration: none;
-    color:inherit;
+  text-decoration: none;
+  color: inherit;
 }
 i.is-downvoted {
-    color:#6366ee;
+  color: #6366ee;
 }
 i.is-upvoted {
-    color:#ff0000;
+  color: #ff0000;
 }

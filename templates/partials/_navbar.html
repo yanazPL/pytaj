@@ -1,16 +1,21 @@
 <nav>
     <div id="nav-left">
 
-        <a href="{% url 'index' %}"><div class="logo"><i class="fas fa-home"></i></div></a>
+        <a href="{% url 'index' %}" class="logo">
+            <i class="fas fa-home"></i>
+        </a>
         <ul id="navlinks">
-                <li><a href="{% url 'ask'%}"><i class="fas fa-plus"></i></a></li>
-                <li><a href="{% url 'index' %}"></a></li>
-                <!-- <div class="searchbar">
-                    <form action="{% url 'search' %}" method="GET">
-                        <input type="text" name="q" value="SZUKAJ">
-                        <button type="submit"><i class="fas fa-search"></i></button>
-                    </form>
-                </div> -->
+            <li>
+                <a href="{% url 'ask'%}">
+                    <i class="fas fa-plus"></i>
+                </a>
+            </li>
+            <li>
+                <form class="search-form" action="{% url 'search' %}" method="GET">
+                    <input type="text" name="q" value="SZUKAJ">
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                </form>
+            </li>
             {% if user.is_authenticated %}
                 <li><a href="{% url 'logout' %}">Wyloguj</a></li>
             {% else %}
@@ -19,6 +24,6 @@
             {% endif %}
         </div>
     </div>
-    <div class="profile-button"><i class="fas fa-user-circle"></i></div>
+    <a class="profile-button" href="#"><i class="fas fa-user-circle"></i></a>
 
 </nav>
