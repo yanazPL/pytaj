@@ -11,16 +11,16 @@
         </div>
         <p>{{question.content}}</p>
         <ul class="sort-by">
-            <li><a href="{% url 'question_new' question.id %}">Najnowsze</a></li>
+            <li><a href="{% url 'question' question.id %}?ordering=-date">Najnowsze</a></li>
             <li><a href="{% url 'question' question.id %}?ordering=-vote_score">Najlepsze</a></li>
-            <li><a href="{% url 'question_oldest' question.id %}">Najstarsze</a></li>
+            <li><a href="{% url 'question' question.id %}?ordering=date">Najstarsze</a></li>
         </ul>
         
     </div>
     {% for answer in object_list %}
         <div class="answer">
             <h3>{{answer.author}}</h3>
-            <p>{{answer.content}}</p>
+            <p>{{answer.content|linebreaks}}</p>
             {% votes_up_exists answer request.user.id as is_upvoted %}
             {% votes_down_exists answer request.user.id as is_downvoted %}
             <p id="answer-{{answer.id}}">

@@ -81,7 +81,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'pytajdb',
         'USER': 'postgres',
-        'PASSWORD' : 'Minda123',
+        'PASSWORD': 'Minda123',
         'HOST': 'localhost',
     }
 }
