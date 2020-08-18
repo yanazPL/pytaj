@@ -13,3 +13,6 @@ class AnswerForm(ModelForm):
         model = Answer
         fields = ['content']
         labels = {'content' : 'Treść'}
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['content'].widget.attrs.update({'class': 'answer-form-content'})

@@ -1,29 +1,38 @@
 <nav>
     <div id="nav-left">
 
-        <a href="{% url 'index' %}" class="logo">
+        <a href="{% url 'index' %}" class="logo icon-link">
             <i class="fas fa-home"></i>
         </a>
-        <ul id="navlinks">
+        <ul class="navlinks">
             <li>
-                <a href="{% url 'ask'%}">
+                <a href="{% url 'ask'%}" class="icon-link">
                     <i class="fas fa-plus"></i>
                 </a>
             </li>
-            <li>
+            <!-- <li class="search-form-li">
                 <form class="search-form" action="{% url 'search' %}" method="GET">
                     <input type="text" name="q" value="SZUKAJ">
                     <button type="submit"><i class="fas fa-search"></i></button>
                 </form>
-            </li>
+            </li> -->
+        </div>
+        <div id="nav-center">
+                <form class="search-form" action="{% url 'search' %}" method="GET">
+                    <input type="text" name="q" value="SZUKAJ">
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                </form>
+        </div>
+    </div>
+    <div id="nav-right">
+        <ul class="navlinks">
             {% if user.is_authenticated %}
                 <li><a href="{% url 'logout' %}">Wyloguj</a></li>
             {% else %}
                 <li><a href="{% url 'login' %}">Zaloguj</a></li>
                 <li><a href="{% url 'signup' %}">Zarejestruj</a></li>
             {% endif %}
-        </div>
+        </ul>
+        <a class="profile-button" href="#" class="icon-link"><i class="fas fa-user-circle"></i></a>
     </div>
-    <a class="profile-button" href="#"><i class="fas fa-user-circle"></i></a>
-
 </nav>

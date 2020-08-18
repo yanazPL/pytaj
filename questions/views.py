@@ -1,12 +1,19 @@
-from django.shortcuts import render, redirect, get_object_or_404, reverse, HttpResponseRedirect, HttpResponse
+from django.shortcuts import render, get_object_or_404, reverse, HttpResponseRedirect, HttpResponse
 from django.views import View
+from django.http import JsonResponse
+from django.views.generic import ListView
+from django.views.generic.edit import FormMixin
+from django.views.generic.detail import SingleObjectMixin
 from.forms import QuestionForm, AnswerForm
 from .models import Question, Answer
 from django.contrib.auth.decorators import login_required
+from questions import common
+
 
 def index(request):
     questions = Question.objects.order_by('-date')
     return render(request, 'questions/index.html', {'questions' : questions})
+
 
 @login_required
 def ask(request):
@@ -21,11 +28,55 @@ def ask(request):
         form = QuestionForm()
     return render(request, 'questions/ask.html', {'form' : form})
 
-def question(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    form = AnswerForm()
-        
-    return render(request, 'questions/question.html', {'question': question, 'form' : form},)
+# def question(request, question_id):
+#     question = get_object_or_404(Question, pk=question_id)
+#     answers = question.answers.all
+#     form = AnswerForm()
+#     return render(request, 'questions/question.html', {'question': question, 'answers': answers ,'form' : form},)
+
+class QuestionView(View):
+    order = '-date'
+    #Order is passed in as_view. Default is by newest date
+    def get(self, request, question_id, *args, **kwargs):
+        question = get_object_or_404(Question, pk=question_id)
+        answers = question.answers.order_by(self.order)
+        form = AnswerForm()
+        return render(request, 'questions/question.html', {'question': question, 'answers': answers ,'form' : form},)
+    # def get(self, request, question_id, *args, **kwargs):
+    #     question = get_object_or_404(Question, pk=question_id)
+    #     orderings = {
+    #         'best' : '-vote_score',
+    #         'new' : '-date',
+    #         'oldest' : 'date'
+    #     }
+    #     order = request.GET.get('order', 'new')
+    #     answers = question.answers.order_by(orderings.get(order, '-date'))
+    #     form = AnswerForm()
+    #     return render(request, 'questions/question.html', {'question': question, 'answers': answers ,'form' : form},)
+class QuestionDetail(FormMixin, SingleObjectMixin, ListView):
+    template_name = 'questions/question.html'
+    form_class = AnswerForm
+    pk_url_kwarg = 'question_id'
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object(queryset=Question.objects.all())
+        return super().get(request, *args, **kwargs)
+
+    def get_ordering(self):
+        return self.request.GET.get('ordering', '-date')
+
+    def get_queryset(self):
+        queryset = self.object.answers.all()
+        ordering = self.get_ordering()
+        if ordering:
+            if isinstance(ordering, str):
+                ordering = (ordering,)
+        queryset = queryset.order_by(*ordering)
+        return queryset
+
+    def form_valid(self, form):
+        pass
+
 
 @login_required
 def answer(request, question_id):
@@ -55,27 +106,42 @@ class AnyVote(View):
             answer_id = request.POST.get('answer_id')
             if answer_id:
                 answer = get_object_or_404(Answer, pk=answer_id)
-                self.votes_action(answer, request.user.id)
-                return HttpResponse("zaglosowano")
-            return HttpResponse("w pierwszym ifie")
+                if self.votes_action(answer, request.user.id):
+                    return JsonResponse({"valid":True}, status = 200)
+                else:
+                    return JsonResponse({"valid":False}, status = 200)
+            else:
+                return JsonResponse({"valid":False}, status = 200)
+             
         else:
-            return HttpResponse("poza ifami")
+            return JsonResponse({}, status = 400)
 
-    def votes_action(self, user_id):
+    def votes_action(self, answer, user_id):
         pass
 
 class Upvote(AnyVote):
     def votes_action(self, answer, user_id):
-        answer.votes.up(user_id)
-
+        answer.author.stats.karma += 1
+        if common.votes_down_exists(answer, user_id):
+            answer.auth.stats.karma += 1
+        answer.author.stats.save()
+        return answer.votes.up(user_id)
 class Downvote(AnyVote):
     def votes_action(self, answer, user_id):
-        answer.votes.down(user_id)
-
+        answer.author.stats.karma -= 1
+        if common.votes_up_exists(answer, user_id):
+            answer.author.stats.karma -= 1
+        answer.author.stats.save()
+        return answer.votes.down(user_id)
 class Unvote(AnyVote):
     def votes_action(self, answer, user_id):
-        answer.vote.delete(user_id)
-
+        if common.votes_down_exists(answer, user_id):
+            answer.author.stats.karma += 1
+        elif common.votes_up_exists(answer, user_id):
+            answer.author.stats.karma -= 1
+        answer.author.stats.save()
+        return answer.votes.delete(user_id)
+        # TODO consider answer.sco
 class Search(View):
     def get(self, request, *args, **kwargs):
         questions_list = Question.objects.order_by("-date")

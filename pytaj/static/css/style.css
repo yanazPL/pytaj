@@ -1,65 +1,89 @@
+/*common style*/
+html {
+  position: relative;
+  min-height: 100%;
+  background-color: #f5f7f8;
+}
 p {
   color: brown;
 }
-.voted {
-  color: orangered;
+a {
+  text-decoration: none;
+  color: inherit;
 }
+
+/*nav style*/
 nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 65px;
-  /* position: sticky;
-    width: 100%;
-    top: 0;
-    left: 0; 
-    z-index: 120; */
+  height: 55px;
   background-color: #4d636f;
-  /* display:flex;
-    justify-content: space-between;
-    text-align: center; */
   color: white;
+  font-size: 17px;
+}
+@media (max-width: 600px) {
+  #nav-center {
+    order: -1;
+    flex-basis: 100%;
+    justify-self: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  nav {
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+}
+.navlinks li a:hover,
+.logo:hover,
+.profile-button:hover {
+  color: black;
+  background-color: white;
 }
 .logo {
   display: flex;
   align-items: center;
-  padding: 0 10px;
-  /* text-align: center;
-    margin: auto; */
+  padding: 0 8px;
 }
 .search-form {
-  padding: 0 10px;
+  padding: 0 8px;
   height: 100%;
   display: flex;
   align-items: center;
 }
 .profile-button {
-  padding: 0 10px;
+  padding: 0 8px;
   height: 100%;
   align-items: center;
   display: flex;
-  /* margin: auto 0;
-    vertical-align: middle;
-    line-height: normal; */
 }
-#navlinks li {
+.navlinks li {
   height: 100%;
+  display: flex;
 }
 #nav-left {
   display: flex;
   align-items: center;
   height: 100%;
-  /* display:flex; */
 }
-
-#navlinks a {
-  padding: 0 10px;
+#nav-right {
+  display: flex;
+  height: 100%;
+}
+.navlinks a {
+  padding: 0 8px;
   height: 100%;
   color: white;
   display: flex;
   align-items: center;
 }
-#navlinks {
+.navlinks li a {
+  height: 100%;
+  display: flex;
+}
+.navlinks {
   height: 100%;
   display: flex;
   align-items: center;
@@ -67,24 +91,95 @@ nav {
   margin: 0;
   padding: 0;
 }
-#navlinks li,
-.profile-button,
-.logo {
-  /* display: inline-block;
-    height:40px;
-    width:50px;
-    font-size: 25px; */
-}
 .logo {
   height: 100%;
 }
-a {
-  text-decoration: none;
-  color: inherit;
+.icon-link {
+  width: 40px;
+  justify-content: center;
 }
+/*voting css*/
 i.is-downvoted {
   color: #6366ee;
 }
 i.is-upvoted {
   color: #ff0000;
+}
+.voted {
+  color: orangered;
+}
+/*foter css*/
+footer {
+  margin-top: 80px;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  overflow: hidden;
+}
+footer div {
+  width: 100%;
+}
+.footer-main {
+  background-color: #4d636f;
+  height: 64px;
+}
+.footer-contributors {
+  background-color: #303e45;
+  height: 50px;
+}
+/* question css*/
+main {
+  width: 70%;
+  margin: auto auto 124px auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+.question,
+.answer {
+  margin: 10px;
+  width: 100%;
+  background-color: #ffffff;
+  border-radius: 1px;
+  box-shadow: -1px 1px 5px 0px rgba(133, 132, 132, 0.75);
+  padding: 5px 7px;
+  font-size: 12px;
+}
+.sort-by {
+  display: flex;
+  justify-content: space-around;
+}
+.sort-by li {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+}
+.sort-by li a {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+.header {
+  border-bottom: 3px solid #f5f7f8;
+}
+.answer-form-content {
+  resize: none;
+  width: 100%;
+}
+.submit-button {
+  background-color: #607d8b;
+  padding: 6px 8px;
+  color: white;
+  width: 125px;
+  font-weight: 400;
+  font-size: 14.5px;
+  height: 30px;
+  text-align: center;
+}
+.submit-button:hover {
+  background-color: #cccccc;
+  color: black;
 }

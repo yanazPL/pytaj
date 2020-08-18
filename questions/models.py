@@ -20,10 +20,11 @@ class Answer(VoteModel, models.Model):
     content = models.TextField()
     author = models.ForeignKey(User, related_name="answers", on_delete=models.DO_NOTHING)
     date = models.DateTimeField(default=timezone.now, blank=True)
+    is_best_answer = models.BooleanField(default=False)
 
 class Stats(models.Model):
     user = models.OneToOneField(User ,related_name="stats", on_delete=models.CASCADE)
-
+    karma = models.BigIntegerField(default=0)
     @receiver(post_save, sender=User)
     def create_stats(sender, instance, created, **kwargs):
         if created:

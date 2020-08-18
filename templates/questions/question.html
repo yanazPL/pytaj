@@ -1,62 +1,44 @@
 {% extends 'base.html' %}
 {% load votes_exists %}
+{% load humanize %}
 {% block title %}{{question.title|truncatechars:52}}{% endblock %}
 {% block content %}
-<h1>{{question.title}}</h1>
-<p>{{question.content}}</p>
-{% for answer in question.answers.all %}
-    <h3>{{answer.author}}</h3>
-    <p>{{answer.content}}</p>
-    {% votes_up_exists answer request.user.id as is_upvoted %}
-    {% votes_down_exists answer request.user.id as is_downvoted %}
-    <p id="answer-{{answer.id}}">
-        <i id="upvote-{{answer.id}}" class="upvote{% if is_upvoted %} is-upvoted{% endif %}" data-answer-id="{{answer.id}}">&#8593</i>
-        <span id="score-{{answer.id}}">{{answer.vote_score}}</span>
-        <i id="downvote-{{answer.id}}" class="downvote{% if is_downvoted%} is-downvoted{% endif %}" data-answer-id="{{answer.id}}">&#8595</i>
-    </p>
-{% endfor %}
-<form method="POST" action="{% url 'answer' question.id %}">
-    {% csrf_token %}
-    {{form.as_p}}
-    <input type="submit" value="Odpowiedz">
-</form>
+<main>
+    <div class="question">
+        <div class="header">
+            <h1 class="question-title">{{question.title}}</h1>
+            <p class="timesince">{{question.date|timesince}}</p>
+        </div>
+        <p>{{question.content}}</p>
+        <ul class="sort-by">
+            <li><a href="{% url 'question_new' question.id %}">Najnowsze</a></li>
+            <li><a href="{% url 'question' question.id %}?ordering=-vote_score">Najlepsze</a></li>
+            <li><a href="{% url 'question_oldest' question.id %}">Najstarsze</a></li>
+        </ul>
+        
+    </div>
+    {% for answer in object_list %}
+        <div class="answer">
+            <h3>{{answer.author}}</h3>
+            <p>{{answer.content}}</p>
+            {% votes_up_exists answer request.user.id as is_upvoted %}
+            {% votes_down_exists answer request.user.id as is_downvoted %}
+            <p id="answer-{{answer.id}}">
+                <i id="upvote-{{answer.id}}" class="upvote{% if is_upvoted %} is-upvoted{% endif %}" data-answer-id="{{answer.id}}">&#8593</i>
+                <span id="score-{{answer.id}}">{{answer.vote_score}}</span>
+                <i id="downvote-{{answer.id}}" class="downvote{% if is_downvoted %} is-downvoted{% endif %}" data-answer-id="{{answer.id}}">&#8595</i>
+            </p>
+        </div>
+    {% endfor %}
+    <form method="POST" action="{% url 'answer' question.id %}">
+        {% csrf_token %}
+        <p>{{form.content}}</p>
+        <input type="submit" value="Odpowiedz" class="submit-button">
+    </form>
+</main>
 {% endblock %}
 {% block javascript %}
     {% load static %}
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
-    <script>
-        //upvote and downvote script
-        var csrftoken = window.Cookies.get('csrftoken');
-        function csrfSafeMethod(method) {
-            // these HTTP methods do not require CSRF protection
-            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-        }
-        $.ajaxSetup({
-            beforeSend: function(xhr, settings) {
-                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                }
-            }
-        });
-        $(".upvote").click( function() {
-            let answerid = $(this).data("answer-id");
-            $.post("{% url 'upvote' %}", {answer_id:answerid}, function(response) {
-                $("#score-" + answerid).load(window.location.href + " " + "#score-" + answerid);
-                $("#upvote-" + answerid).load(window.location.href + " " + "#upvote-" + answerid);
-                $("#downvote-" + answerid).load(window.location.href + " " + "#downvote-" + answerid);
-                //$("#answer-" + answerid).load(window.location.href + " " + "#answer-" + answerid);
-                alert(response);
-            });
-        });
-        $(".downvote").click( function() {
-            let answerid = $(this).data("answer-id");
-            $.post("{% url 'downvote' %}", {answer_id:answerid}, function(response) {
-                $("#score-" + answerid).load(window.location.href + " " + "#score-" + answerid);
-                $("#upvote-" + answerid).load(window.location.href + " " + "#upvote-" + answerid);
-                $("#downvote-" + answerid).load(window.location.href + " " + "#downvote-" + answerid);
-                //$("#answer-" + answerid).load(window.location.href + " " + "#answer-" + answerid);
-                alert(response);
-            });
-        });
-    </script>
+    <script src="{% static 'js/voting.js' %}"></script>
 {% endblock %}
